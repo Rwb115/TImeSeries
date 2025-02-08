@@ -1,0 +1,127 @@
+---
+title: "WB - Importing and Playing HW 1"
+output: html_document
+date: "2025-02-07"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+# importing data from csv file
+Typical_Employee_Survey_Data <- read.csv("/Users/willbarredo/Documents/School/Courses/Junior/Sem\ 2/Time\ Series/Week\ 2/Typical_Employee_Survey_Data.csv",header = FALSE)
+
+# assign column names
+colnames(Typical_Employee_Survey_Data) <- c(
+  "Age",                     
+  "Gender",                  
+  "Job_Satisfaction",        
+  "Important_Job_Characteristic", 
+  "Years_Worked",            
+  "Promotion_Likelihood",    
+  "Decision_Making",         
+  "Budget_Participation",    
+  "Org_Pride",               
+  "Turn_Down_Higher_Pay",    
+  "Workplace_Relations"
+)
+
+# convert columns to factors
+categorical_cols <- c("Gender", "Job_Satisfaction", "Important_Job_Characteristic", 
+                      "Promotion_Likelihood", "Decision_Making", "Budget_Participation",
+                      "Org_Pride", "Turn_Down_Higher_Pay", "Workplace_Relations")
+
+Typical_Employee_Survey_Data[categorical_cols] <- lapply(Typical_Employee_Survey_Data[categorical_cols], as.factor)
+
+# print 5-number summary 
+summary(Typical_Employee_Survey_Data)
+
+# generate boxplots
+boxplot(Typical_Employee_Survey_Data$Age, Typical_Employee_Survey_Data$Years_Worked,
+        names = c("Age", "Years Worked"),
+        main = "Boxplots for Age and Years Worked")
+# For Age, employees tend to be in their 30s to early 40s as the IQR (50% of data) is within the 30-45 range, with the youngest being around their early 20s while the oldest are in their 60s. There are outliers beyond the 60 mark for three employees.
+# For Years Worked, the median years falls around 5. The plot indicates that the majority of employees have worked for the company for less than 15 years, but there are notable outliers that have worked beyond 20 years at the company. 
+
+# histogram age 
+hist(Typical_Employee_Survey_Data$Age,
+     main = "Histogram of Age",
+     xlab = "Age")
+# Can readily observe that most employees fall within the 30-40 age buckets with the highest frequencies, as shown by the peak. The majority of employees are 30-45 years old. 
+
+# barplot gender
+barplot(table(Typical_Employee_Survey_Data$Gender),
+     main = "Barplot: Gender Distribution",
+     names.arg = c("Male", "Female"))
+# the majority of employees are male
+
+# barplot job satisfaction
+barplot(table(Typical_Employee_Survey_Data$Job_Satisfaction),
+        main = "Barplot: Job Satisfaction Levels",
+        xlab = "Level of Satisfaction (1: very satisfied, 4: very unsatisfied)")
+# majority of employees are very satisfied at their jobs
+
+# barplot for job characteristic
+barplot(table(Typical_Employee_Survey_Data$Important_Job_Characteristic),
+        main = "Barplot: Important Job Characteristic",
+        names.arg = c("High Income","Job Security","Flexible Hours","Advancement","Enjoying Work"),
+        cex.names = 0.7,
+        las = 2)
+# the leading most important job characteristic is enjoying the work, while the second most important is a high income
+
+#histogram for years worked 
+hist(Typical_Employee_Survey_Data$Years_Worked,
+     main = "Histogram of Years Worked",
+     xlab = "Years Worked at Company")
+# vast majority of employees have worked at the company for 10 or less years
+
+# barplot for promotion likelihood
+barplot(table(Typical_Employee_Survey_Data$Promotion_Likelihood),
+        main = "Barplot: Promotion Likelihood",
+        xlab = "Likelihood of Promotion (1: very likely, 5: very unlikely)")
+# slightly more than half of employees feel that a promotion is unlikely while the remainder feels that a promotion is likely, with little employees feeling indifferent
+
+# barplot for decision making affecting job
+barplot(table(Typical_Employee_Survey_Data$Decision_Making),
+        main = "Barplot: Decision Making Affecting Job",
+        xlab = "Degree of Decision Making Freedom (1: always, 4: never)")
+# most employees feel that their job allows them to make decisions affecting their work "most of the time" and "sometimes" with fewer employees feeling "always" and "never"
+
+# barplot for budgetary decisions
+barplot(table(Typical_Employee_Survey_Data$Budget_Participation),
+        main = "Barplot: Budget Participation",
+        names.arg = c("yes","no"))
+# slightly more than half of employees participate in budgetary decisions
+
+# barplot for proudness
+barplot(table(Typical_Employee_Survey_Data$Org_Pride),
+        main = "Barplot: Organization Pride",
+        xlab = "Degree of Proudness (1: very proud, 4: not at all proud)")
+# majority of employees are somewhat proud of their organization with the next largest amount feeling very proud
+
+# barplot for job loyalty 
+barplot(table(Typical_Employee_Survey_Data$Turn_Down_Higher_Pay),
+        main = "Barplot: Loyalty to Org with Higher Paying Job Offer",
+        xlab = "Likelihood to Stay (1: very likely, 5: very unlikely)")
+# most employees are unlikely to stay with the org when given an offer with more lucrative pay
+
+# barplot for workplace relations
+barplot(table(Typical_Employee_Survey_Data$Workplace_Relations),
+        main = "Barplot: Workplace Relations",
+        xlab = "Workplace Relations Quality (1: very good, 5: very bad)")
+# majority of employees feel workplace relations are very good to good, with a nonexistent amount that feel relations are very bad
+
+# scatter plot comparing age to years worked at org
+plot(Typical_Employee_Survey_Data$Age, Typical_Employee_Survey_Data$Years_Worked,
+     main = "Scatter Plot: Age vs. Years Worked",
+     xlab = "Age",
+     ylab = "Years Worked")
+# Years of experience seems to increase as age increases, but this is not always the case with some older employees still having less years of experience than younger counterparts. There is a cluster of data points within the ages of 30-40 with around 10 or less years of experience, telling us that the company is generally younger with 10 or fewer years of experience.
+
+# scatter plot comparing Job Satisfaction and Workplace Relations
+plot(jitter(as.numeric(Typical_Employee_Survey_Data$Job_Satisfaction)), jitter(as.numeric(Typical_Employee_Survey_Data$Workplace_Relations)),
+     main = "Scatter Plot: Job Satisfaction vs Workplace Relations",
+     xlab = "Job Satisfaction (1: very satisfied, 4: very unsatisfied)",
+     ylab = "Workplace Relations Quality (1:very good, 4:very bad)")
+# a cluster of values are present for ratings of 1 for Job Satisfaction and Workplace Relations Quality, suggesting a correlation with very good workplace relations and high job satisfaction.
+
